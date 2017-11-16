@@ -101,7 +101,15 @@ public class ConversationProvider {
         return false;
     }
 
-
+    @RequestMapping(path = "/getFreshMessages")
+    @ResponseBody
+    public ArrayList<Message> getFreshMessages(@RequestParam(value="conversationID") int conversationID,
+                                               @RequestParam(value="from") int from){
+        if(conversationsPerID.get(conversationID) == null){
+            return null;
+        }
+        return conversationsPerID.get(conversationID).getFreshMessages(from);
+    }
 
     @Bean
     public CommonsRequestLoggingFilter requestLoggingFilter() {
