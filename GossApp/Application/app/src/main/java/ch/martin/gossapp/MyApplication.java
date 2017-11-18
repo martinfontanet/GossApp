@@ -28,9 +28,9 @@ public class MyApplication extends Application {
         conversation1.addUser(new User("nathan",2));
 
         Conversation conversation2 = new Conversation(2, "Conversation 2");
-        conversation1.addUser(new User("martin",1));
-        conversation1.addUser(new User("nathan",2));
-        conversation1.addUser(new User("tristan",3));
+        conversation2.addUser(new User("martin",1));
+        conversation2.addUser(new User("nathan",2));
+        conversation2.addUser(new User("tristan",3));
 
 
         ArrayList<Conversation> conversations = new ArrayList<>();

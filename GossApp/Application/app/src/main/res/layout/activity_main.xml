@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ch.gossapp.martin.gossapp.activities.MainActivity">
+    tools:context="ch.martin.gossapp.activities.MainActivity">
 
     <ScrollView
         android:id="@+id/view_conversations"

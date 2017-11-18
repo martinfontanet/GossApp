@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
-    tools:context="ch.gossapp.martin.gossapp.activities.ConversationActivity">
+    tools:context="ch.martin.gossapp.activities.ConversationActivity">
 
     <RelativeLayout
         android:id="@+id/text_bar"

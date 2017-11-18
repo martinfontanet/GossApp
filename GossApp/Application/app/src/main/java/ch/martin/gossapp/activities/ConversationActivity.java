@@ -1,4 +1,4 @@
-package ch.gossapp.martin.gossapp.activities;
+package ch.martin.gossapp.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ch.gossapp.martin.gossapp.Conversation;
-import ch.gossapp.martin.gossapp.Message;
-import ch.gossapp.martin.gossapp.MyApplication;
-import ch.gossapp.martin.gossapp.R;
+import ch.martin.gossapp.classes.Conversation;
+import ch.martin.gossapp.classes.Message;
+import ch.martin.gossapp.MyApplication;
+import ch.martin.gossapp.R;
 
 public class ConversationActivity extends AppCompatActivity {
 
