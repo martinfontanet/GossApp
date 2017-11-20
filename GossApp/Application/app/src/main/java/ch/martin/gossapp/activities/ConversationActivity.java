@@ -11,6 +11,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.Message;
@@ -54,8 +55,8 @@ public class ConversationActivity extends AppCompatActivity {
         //String message = messageText.getText().toString() + '\n';
         String message = messageText.getText().toString();
         messageText.setText("");
-        int authorID = ((MyApplication) getApplicationContext()).getUserID();
-        conversation.addMessage(new Message(authorID, conversation.getId(), message));
+        int authorID = ((MyApplication) getApplicationContext()).getUser().getID();
+        conversation.addMessage(new Message(authorID, conversation.getId(), message, 1));
 
 
         refresh(messages.size()-1);
@@ -63,7 +64,7 @@ public class ConversationActivity extends AppCompatActivity {
 
 
     private void refresh(int from){
-        ArrayList<Message> newMessages = conversation.getFreshMessages(from);
+        ArrayList<Message> newMessages = conversation.getFreshMessages(new Date(1));
         for(Message mess: newMessages){
             TextView text = new TextView(getApplicationContext());
 
@@ -86,7 +87,7 @@ public class ConversationActivity extends AppCompatActivity {
             LinearLayout inner_layout = new LinearLayout(getApplicationContext());//(LinearLayout) findViewById(R.id.bubble_layout);
             inner_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-            if(mess.getAuthorID() == ((MyApplication) getApplicationContext()).getUserID()){
+            if(mess.getAuthorID() == ((MyApplication) getApplicationContext()).getUser().getID()){
                 inner_layout.setGravity(Gravity.TOP | Gravity.RIGHT);
                 text.setBackgroundColor(0xC98BF3E7);
             }

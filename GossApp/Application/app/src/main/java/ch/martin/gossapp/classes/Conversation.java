@@ -1,6 +1,10 @@
 package ch.martin.gossapp.classes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 
 public class Conversation {
     private final int id;
@@ -10,7 +14,7 @@ public class Conversation {
 
 
 
-    public Conversation(int id, String name) {
+    public Conversation(@JsonProperty("id") int id,@JsonProperty("name") String name) {
         this.id = id;
         this.users = new ArrayList<>();
         this.name = name;
@@ -37,7 +41,10 @@ public class Conversation {
     }
 
     public void addMessage(Message message){
-        messages.add(message);
+        if(!messages.contains(message)) {
+            messages.add(message);
+        }
+        Collections.sort(messages);
     }
 
     public ArrayList<User> getUsers() {
@@ -58,11 +65,13 @@ public class Conversation {
         return name;
     }
 
-    public ArrayList<Message> getFreshMessages(int index) {
+    public ArrayList<Message> getFreshMessages(Date date) {
         ArrayList<Message> newMessages = new ArrayList<>();
 
-        for(int i=index; i<messages.size(); ++i){
-            newMessages.add(messages.get(i));
+        for(Message message: messages){
+            if(message.getDateAndTime().compareTo(date) >=0) {
+                newMessages.add(message);
+            }
         }
         return newMessages;
     }

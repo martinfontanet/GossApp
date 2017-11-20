@@ -1,11 +1,14 @@
 package ch.martin.gossapp.classes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 public class User {
     private final int id;
     private String name;
     private final ArrayList<Contact> contacts = new ArrayList<>();
+    private final ArrayList<Integer> conversationsID = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -15,13 +18,22 @@ public class User {
                 '}';
     }
 
-    public User(String name, int id){
+    public User(@JsonProperty("id") int id,@JsonProperty("name") String name){
         this.name = name;
         this.id = id;
     }
 
+    public User(){
+        this.name = "undefined";
+        this.id = -1;
+    }
+
     public void addContact(Contact contact){
         this.contacts.add(contact);
+    }
+
+    public void addConversationID(int conversationID){
+        this.conversationsID.add(conversationID);
     }
 
     public int getID(){

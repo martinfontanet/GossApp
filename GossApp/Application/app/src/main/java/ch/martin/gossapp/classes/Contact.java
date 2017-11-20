@@ -1,9 +1,11 @@
 package ch.martin.gossapp.classes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Contact {
     private String name;
 
-    public Contact(String name){
+    public Contact(@JsonProperty("name") String name){
         this.name = name;
     }
 

@@ -9,12 +9,19 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import ch.martin.gossapp.MyApplication;
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.R;
 import ch.martin.gossapp.classes.User;
+import ch.martin.gossapp.networking.ConversationsProvider;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Conversation> conversations;
@@ -25,13 +32,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        conversations = ((MyApplication) getApplicationContext()).getConversations();
         findViews();
-        loadConversations();
+
+        try {
+            ((MyApplication) getApplicationContext()).connectUser();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void renameTitle(){
+        TextView title = findViewById(R.id.textView2);
+        title.setText("Hello "+((MyApplication) getApplicationContext()).getUser().getName()+"!");
     }
 
     private void loadConversations(){
+        conversations = ((MyApplication) getApplicationContext()).getConversations();
+        System.out.println(conversations.size());
         for(final Conversation conversation: conversations){
+            System.out.println("2");
             TextView conv_text = new TextView(getApplicationContext());
             ConstraintLayout conv_layout = new ConstraintLayout(getApplicationContext());
 
@@ -76,7 +96,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeUser(int i){
-        ((MyApplication) getApplicationContext()).setCurrentUser(i);
+        renameTitle();
+
+        loadConversations();
+        ((MyApplication) getApplicationContext()).setCurrentUser(new User(i, "test"));
     }
 
     public void goToUser1(View view){
