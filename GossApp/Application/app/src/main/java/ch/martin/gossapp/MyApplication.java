@@ -5,9 +5,11 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import ch.martin.gossapp.activities.MainActivity;
 import ch.martin.gossapp.classes.Conversation;
+import ch.martin.gossapp.classes.Message;
 import ch.martin.gossapp.classes.User;
 import ch.martin.gossapp.networking.ConversationsProvider;
 
@@ -30,10 +32,12 @@ public class MyApplication extends Application {
     }
 
     public void addConversations(ArrayList<Conversation> conversationsList){
+        conversations.clear();
         conversations.addAll(conversationsList);
     }
 
-    public ArrayList<Conversation> getConversations(){  
+
+    public ArrayList<Conversation> getConversations(){
         /*Conversation conversation1 = new Conversation(1, "Conversation 1");
         conversation1.addUser(new User(1,"martin"));
         conversation1.addUser(new User(2, "nathan"));
@@ -47,6 +51,12 @@ public class MyApplication extends Application {
         ArrayList<Conversation> conversations = new ArrayList<>();
         conversations.add(conversation1);
         conversations.add(conversation2);*/
+
+        try {
+            conversationsProvider.getInformation(user);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return conversations;
     }
@@ -65,10 +75,35 @@ public class MyApplication extends Application {
         return null;
     }
 
+    public void refreshMessages(Conversation conversation, Date from){
+
+        try {
+            conversationsProvider.getFreshMessages(conversation, from);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void addMessages(int conversationID, Conversation.MessagePack pack){
+        if(pack != null) {
+            for (Conversation conversation : conversations) {
+                if (conversation.getId() == conversationID) {
+                    for (Message message : pack.getPack())
+                        conversation.addMessage(message);
+                    System.out.println("ADDDDDDIIIIING");
+                }
+            }
+            System.out.println(pack.getPack().size());
+        }
+
+
+    }
+
     public void connectUser() throws IOException {
         conversationsProvider = new ConversationsProvider(getApplicationContext());
         conversationsProvider.connectUser();
-        conversationsProvider.getInformation(new User(1,"martin"));
+        conversationsProvider.getInformation(user);
         //conversationsProvider.getConversationsID(1);
     }
 

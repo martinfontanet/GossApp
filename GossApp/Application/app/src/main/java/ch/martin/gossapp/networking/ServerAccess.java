@@ -24,7 +24,7 @@ import ch.martin.gossapp.MyApplication;
 
 public class ServerAccess<Req, Resp> {
 
-    public static final String BASE_URL = "http://192.168.1.106:8080";
+    public static final String BASE_URL = "http://192.168.0.185:8080";
     public static final int MY_SOCKET_TIMEOUT_MS = 100000;
 
     public interface OnResultHandler<Resp> {
@@ -49,7 +49,7 @@ public class ServerAccess<Req, Resp> {
         this.responseListener = new Response.Listener<JSONObject>(){
             @Override
             public void onResponse(JSONObject response) {
-                System.out.println("RESPONSE !!!!!!!!!!!!!!!!!!!!");
+                //System.out.println("RESPONSE !!!!!!!!!!!!!!!!!!!!");
                 try {
                     onResultHandler.onSuccess(jsonToResponse(response));
                 } catch (JSONException | IOException e) {
@@ -61,7 +61,7 @@ public class ServerAccess<Req, Resp> {
         this.errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("ERROR", error.toString());
+                //Log.e("ERROR", error.toString());
                 onResultHandler.onError();
             }
         };
@@ -72,17 +72,17 @@ public class ServerAccess<Req, Resp> {
     public void makeRequest(Req data) throws ServerAccessException {
         try {
             JSONObject requestData = requestToJson(data);
-            System.out.println(requestData);
+            //System.out.println(requestData);
             JsonObjectRequest request = new JsonObjectRequest(method, url, requestData, responseListener, errorListener);
-            System.out.println(request);
+            //System.out.println(request);
             request.setRetryPolicy(new DefaultRetryPolicy(
                     MY_SOCKET_TIMEOUT_MS,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            System.out.println(request);
+            //System.out.println(request);
             requestQueue.add(request);
-            System.out.println(request);
-            System.out.println(request);
+            //System.out.println(request);
+            //System.out.println(request);
 
         } catch (JSONException | IOException e) {
             throw new ServerAccessException("Failed to create JSON.", e);

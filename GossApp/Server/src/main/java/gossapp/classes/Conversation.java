@@ -12,7 +12,22 @@ public class Conversation {
     private String name;
     private final ArrayList<Message> messages = new ArrayList<>();
 
+    public class MessagePack{
+        private final ArrayList<Message> pack;
 
+        public MessagePack(@JsonProperty("date") Date date) {
+            pack = new ArrayList<>();
+            for(Message message: messages){
+                if(message.getDateAndTime().compareTo(date) >= 0) {
+                    pack.add(message);
+                }
+            }
+        }
+
+        public ArrayList<Message> getPack(){
+            return pack;
+        }
+    }
 
     public Conversation(@JsonProperty("id") int id,@JsonProperty("name") String name) {
         this.id = id;
@@ -65,15 +80,8 @@ public class Conversation {
         return name;
     }
 
-    public ArrayList<Message> getFreshMessages(Date date) {
-        ArrayList<Message> newMessages = new ArrayList<>();
-
-        for(Message message: messages){
-            if(message.getDateAndTime().compareTo(date) >=0) {
-                newMessages.add(message);
-            }
-        }
-        return newMessages;
+    public MessagePack getFreshMessages(Date date) {
+        return new MessagePack(date);
     }
 
     public ArrayList<Message> getMessages(){

@@ -3,6 +3,7 @@ package ch.martin.gossapp.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TreeSet;
 
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.Message;
@@ -27,8 +29,11 @@ public class ConversationActivity extends AppCompatActivity {
     // PERSONNAL CLASSES
 
     private Conversation conversation;
-    private ArrayList<Message> messages;
+    private TreeSet<Message> messages;
 
+    private int messagesPrinted = 0;
+
+    private final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +50,29 @@ public class ConversationActivity extends AppCompatActivity {
         conversation = ((MyApplication) getApplicationContext()).getCurrentConversation();
         messages = conversation.getMessages();
 
-        refresh(0);
+        autoRefresh();
+    }
+
+    private void autoRefresh() {
+        handler.postDelayed(new Runnable() {
+            @Override
+
+            // Method to execute every 300 milliseconds
+            public void run() {
+
+                // Load messages from time 0 or from the time of the 10th last message
+                Date from = new Date(Math.max(0,conversation.getMessages().size() - 10));
+
+                ((MyApplication) getApplicationContext()).refreshMessages(conversation, from);
+
+                if(messages.size() > messagesPrinted)
+                refresh();
+
+                autoRefresh();
+
+
+            }
+        }, 300);
     }
 
     public void sendMessage(View view) {
@@ -59,20 +86,18 @@ public class ConversationActivity extends AppCompatActivity {
         conversation.addMessage(new Message(authorID, conversation.getId(), message, 1));
 
 
-        refresh(messages.size()-1);
+        //refresh();
     }
 
 
-    private void refresh(int from){
-        ArrayList<Message> newMessages = conversation.getFreshMessages(new Date(1));
-        for(Message mess: newMessages){
+    private void refresh(){
+        //Conversation.MessagePack newMessages = conversation.getFreshMessages(new Date(1));
+        linear_layout.removeAllViews();
+
+        for(Message mess: messages){ //newMessages.getPack()){
             TextView text = new TextView(getApplicationContext());
 
             String message = conversation.getNameByID(mess.getAuthorID()) +": "+ mess.toString();
-
-
-
-
 
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             lp.setMargins(10, 10, 10, 10);
@@ -107,6 +132,8 @@ public class ConversationActivity extends AppCompatActivity {
                 }
             });
         }
+
+        messagesPrinted = messages.size();
     }
 
     private void findViews(){

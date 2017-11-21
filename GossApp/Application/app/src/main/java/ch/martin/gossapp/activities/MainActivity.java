@@ -3,16 +3,12 @@ package ch.martin.gossapp.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.codehaus.jackson.map.ObjectMapper;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,11 +17,12 @@ import ch.martin.gossapp.MyApplication;
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.R;
 import ch.martin.gossapp.classes.User;
-import ch.martin.gossapp.networking.ConversationsProvider;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Conversation> conversations;
     private LinearLayout conversationsLayout;
+
+    private final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +37,21 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        autoRefresh();
+    }
+
+    private void autoRefresh() {
+        handler.postDelayed(new Runnable() {
+            @Override
+
+            // Method to execute every 300 milliseconds
+            public void run() {
+                renameTitle();
+                loadConversations();
+
+                autoRefresh();
+            }
+        }, 300);
     }
 
     public void renameTitle(){
@@ -49,9 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadConversations(){
         conversations = ((MyApplication) getApplicationContext()).getConversations();
-        System.out.println(conversations.size());
+        //System.out.println("size : "+conversations.size());
+
+        conversationsLayout.removeAllViews();
+
         for(final Conversation conversation: conversations){
-            System.out.println("2");
             TextView conv_text = new TextView(getApplicationContext());
             ConstraintLayout conv_layout = new ConstraintLayout(getApplicationContext());
 

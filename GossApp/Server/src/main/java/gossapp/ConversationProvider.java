@@ -88,6 +88,8 @@ public class ConversationProvider {
     @RequestMapping(path = "/newConversation", method = RequestMethod.POST)
     @ResponseBody
     public Conversation newConversation(@RequestBody Conversation conversation){
+        if (conversationsPerID.get(conversation.getId()) == null) {
+            conversationsPerID.put(conversation.getId(),conversation);
             return conversation;
         }
         return null;
@@ -136,8 +138,8 @@ public class ConversationProvider {
 
     @RequestMapping(path = "/getFreshMessages")
     @ResponseBody
-    public ArrayList<Message> getFreshMessages(@RequestParam(value="conversationID") int conversationID,
-                                               @RequestParam(value="from") int from){
+    public Conversation.MessagePack getFreshMessages(@RequestParam(value="conversationID") int conversationID,
+                                                     @RequestParam(value="from") int from){
         if(conversationsPerID.get(conversationID) == null){
             return null;
         }

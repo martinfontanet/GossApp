@@ -26,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,7 @@ public class ConversationsProvider {
 
     //private static final String URL_getConversationsID = ServerAccess.BASE_URL + "/requestConversations?userID=%d";
     //private static final String URL_getConversation = ServerAccess.BASE_URL + "/getConversation?conversationID=%d";
+    private static final String URL_freshMessages = ServerAccess.BASE_URL + "/getFreshMessages?conversationID=%d&from=%d";
     private static final String URL_getInfo = ServerAccess.BASE_URL + "/getInfo";
     private static final String URL_test = ServerAccess.BASE_URL + "/pureTest";
 
@@ -137,6 +139,7 @@ public void getInformation(User query) throws IOException {
 
         @Override
         public void onError() {
+            ((MyApplication) context).addConversations(new ArrayList<Conversation>());
             //mainAct.renameTitle("Connection error.");
         }
 
@@ -149,6 +152,36 @@ public void getInformation(User query) throws IOException {
         throw new IOException();
     }
 }
+//TODO FIX REQUEST PARAM/REQUEST BODY
+    public void getFreshMessages(Conversation conversation, Date time) throws IOException {
+        final int conversationID = conversation.getId();
+        System.out.println(getFreshMessagesURL(conversationID,time.getTime()));
+        ServerAccess<Conversation, Conversation.MessagePack> serverAccess = new ServerAccess<>(context, Request.Method.POST, getFreshMessagesURL(conversationID,time.getTime()), new ServerAccess.OnResultHandler<Conversation.MessagePack>() {
+            @Override
+            public void onSuccess(Conversation.MessagePack response) {
+                System.out.println("SFJKSAHFKSJAHFKJSHFK");
+                ((MyApplication) context).addMessages(conversationID,response);
+            }
+
+            @Override
+            public void onError() {
+                ((MyApplication) context).addMessages(conversationID, null);
+                //mainAct.renameTitle("Connection error.");
+            }
+
+        }, Conversation.MessagePack.class);
+
+        try {
+            serverAccess.makeRequest(conversation);
+        } catch (ServerAccess.ServerAccessException e) {
+
+            throw new IOException();
+        }
+    }
+
+    public String getFreshMessagesURL(int conversationID, long date) {
+        return String.format(URL_freshMessages, conversationID, date);
+    }
 /*
     public String getConversationsByIDURL(int userID) {
         return String.format(URL_getConversationsID, userID);
