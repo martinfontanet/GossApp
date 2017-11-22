@@ -24,7 +24,7 @@ import ch.martin.gossapp.MyApplication;
 
 public class ServerAccess<Req, Resp> {
 
-    public static final String BASE_URL = "http://128.179.157.238:8080";
+    public static final String BASE_URL = "http://128.179.159.138:8080";
     public static final int MY_SOCKET_TIMEOUT_MS = 100000;
 
     public interface OnResultHandler<Resp> {

@@ -12,7 +12,7 @@ public class Message implements Comparable{
     public Message(@JsonProperty("authorID") int authorID,
                    @JsonProperty("conversationID") int conversationID,
                    @JsonProperty("text") String text,
-                   @JsonProperty("date") int date){
+                   @JsonProperty("date") long date){
         this.authorID = authorID;
         this.conversationID = conversationID;
         this.text = text;

@@ -76,11 +76,10 @@ public class ConversationActivity extends AppCompatActivity {
 
 
             }
-        }, 300);
+        }, 100);
     }
 
 
-    //TODO REQUEST NEW MESSAGE
     public void sendMessage(View view) {
         // Do something in response to button
         Intent intent = getIntent();
@@ -89,7 +88,7 @@ public class ConversationActivity extends AppCompatActivity {
         String message = messageText.getText().toString();
         messageText.setText("");
         int authorID = ((MyApplication) getApplicationContext()).getUser().getID();
-        conversation.addMessage(new Message(authorID, conversation.getId(), message, 1));
+        ((MyApplication) getApplicationContext()).newMessage(new Message(authorID, conversation.getId(), message, System.currentTimeMillis()));
 
 
         //refresh();

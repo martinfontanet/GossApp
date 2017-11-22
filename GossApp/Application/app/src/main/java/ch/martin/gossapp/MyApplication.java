@@ -100,6 +100,14 @@ public class MyApplication extends Application {
 
     }
 
+    public void newMessage(Message message){
+        try {
+            conversationsProvider.newMessage(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void connectUser() throws IOException {
         conversationsProvider = new ConversationsProvider(getApplicationContext());
         conversationsProvider.connectUser();

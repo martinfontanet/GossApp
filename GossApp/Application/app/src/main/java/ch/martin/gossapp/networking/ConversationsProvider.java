@@ -36,6 +36,7 @@ import ch.martin.gossapp.activities.MainActivity;
 import ch.martin.gossapp.classes.ConnectionRequest;
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.Information;
+import ch.martin.gossapp.classes.Message;
 import ch.martin.gossapp.classes.ParametersPasser;
 import ch.martin.gossapp.classes.User;
 
@@ -45,6 +46,9 @@ public class ConversationsProvider {
     //private static final String URL_getConversation = ServerAccess.BASE_URL + "/getConversation?conversationID=%d";
     private static final String URL_freshMessages = ServerAccess.BASE_URL + "/getFreshMessages";
     private static final String URL_getInfo = ServerAccess.BASE_URL + "/getInfo";
+    private static final String URL_newMessage = ServerAccess.BASE_URL + "/newMessage";
+
+
     private static final String URL_test = ServerAccess.BASE_URL + "/pureTest";
 
 
@@ -153,7 +157,7 @@ public void getInformation(User query) throws IOException {
         throw new IOException();
     }
 }
-//TODO FIX REQUEST PARAM/REQUEST BODY
+
     public void getFreshMessages(final Conversation conversation, Date time) throws IOException {
         final ParametersPasser<Integer,Long,Integer,Integer> query = new ParametersPasser<>(conversation.getId(),time.getTime(),0,0);
         ServerAccess<ParametersPasser<Integer,Long,Integer,Integer>, Conversation.MessagePack> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_freshMessages, new ServerAccess.OnResultHandler<Conversation.MessagePack>() {
@@ -173,6 +177,31 @@ public void getInformation(User query) throws IOException {
 
         try {
             serverAccess.makeRequest(query);
+        } catch (ServerAccess.ServerAccessException e) {
+
+            throw new IOException();
+        }
+    }
+
+    public void newMessage(final Message message) throws IOException{
+        ServerAccess<Message, Message> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_newMessage, new ServerAccess.OnResultHandler<Message>() {
+            @Override
+            public void onSuccess(Message response) {
+                if(message != response){
+                    //ERROR
+                    System.out.println("ERROR");
+                }
+            }
+
+            @Override
+            public void onError() {
+                //mainAct.renameTitle("Connection error.");
+            }
+
+        }, Message.class);
+
+        try {
+            serverAccess.makeRequest(message);
         } catch (ServerAccess.ServerAccessException e) {
 
             throw new IOException();
