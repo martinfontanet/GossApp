@@ -88,6 +88,6 @@ public class Conversation {
 
 
     public TreeSet<Message> getMessages(){
-        return this.messages;
+        return new TreeSet<>(this.messages);
     }
 }

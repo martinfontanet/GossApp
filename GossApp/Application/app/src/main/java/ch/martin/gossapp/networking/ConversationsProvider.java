@@ -36,13 +36,14 @@ import ch.martin.gossapp.activities.MainActivity;
 import ch.martin.gossapp.classes.ConnectionRequest;
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.Information;
+import ch.martin.gossapp.classes.ParametersPasser;
 import ch.martin.gossapp.classes.User;
 
 public class ConversationsProvider {
 
     //private static final String URL_getConversationsID = ServerAccess.BASE_URL + "/requestConversations?userID=%d";
     //private static final String URL_getConversation = ServerAccess.BASE_URL + "/getConversation?conversationID=%d";
-    private static final String URL_freshMessages = ServerAccess.BASE_URL + "/getFreshMessages?conversationID=%d&from=%d";
+    private static final String URL_freshMessages = ServerAccess.BASE_URL + "/getFreshMessages";
     private static final String URL_getInfo = ServerAccess.BASE_URL + "/getInfo";
     private static final String URL_test = ServerAccess.BASE_URL + "/pureTest";
 
@@ -153,36 +154,35 @@ public void getInformation(User query) throws IOException {
     }
 }
 //TODO FIX REQUEST PARAM/REQUEST BODY
-    public void getFreshMessages(Conversation conversation, Date time) throws IOException {
-        final int conversationID = conversation.getId();
-        System.out.println(getFreshMessagesURL(conversationID,time.getTime()));
-        ServerAccess<Conversation, Conversation.MessagePack> serverAccess = new ServerAccess<>(context, Request.Method.POST, getFreshMessagesURL(conversationID,time.getTime()), new ServerAccess.OnResultHandler<Conversation.MessagePack>() {
+    public void getFreshMessages(final Conversation conversation, Date time) throws IOException {
+        final ParametersPasser<Integer,Long,Integer,Integer> query = new ParametersPasser<>(conversation.getId(),time.getTime(),0,0);
+        ServerAccess<ParametersPasser<Integer,Long,Integer,Integer>, Conversation.MessagePack> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_freshMessages, new ServerAccess.OnResultHandler<Conversation.MessagePack>() {
             @Override
             public void onSuccess(Conversation.MessagePack response) {
                 System.out.println("SFJKSAHFKSJAHFKJSHFK");
-                ((MyApplication) context).addMessages(conversationID,response);
+                ((MyApplication) context).addMessages(conversation.getId(),response);
             }
 
             @Override
             public void onError() {
-                ((MyApplication) context).addMessages(conversationID, null);
+                ((MyApplication) context).addMessages(conversation.getId(), null);
                 //mainAct.renameTitle("Connection error.");
             }
 
         }, Conversation.MessagePack.class);
 
         try {
-            serverAccess.makeRequest(conversation);
+            serverAccess.makeRequest(query);
         } catch (ServerAccess.ServerAccessException e) {
 
             throw new IOException();
         }
     }
-
+/*
     public String getFreshMessagesURL(int conversationID, long date) {
         return String.format(URL_freshMessages, conversationID, date);
     }
-/*
+
     public String getConversationsByIDURL(int userID) {
         return String.format(URL_getConversationsID, userID);
     }

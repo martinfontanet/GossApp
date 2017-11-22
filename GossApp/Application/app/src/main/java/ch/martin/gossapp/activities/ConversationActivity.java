@@ -65,8 +65,12 @@ public class ConversationActivity extends AppCompatActivity {
 
                 ((MyApplication) getApplicationContext()).refreshMessages(conversation, from);
 
-                if(messages.size() > messagesPrinted)
-                refresh();
+                conversation = ((MyApplication) getApplicationContext()).getCurrentConversation();
+                messages = conversation.getMessages();
+                System.out.println("SIZE : "+messages.size()+ " / "+messagesPrinted);
+                if(messages.size() > messagesPrinted) {
+                    refresh();
+                }
 
                 autoRefresh();
 
@@ -75,6 +79,8 @@ public class ConversationActivity extends AppCompatActivity {
         }, 300);
     }
 
+
+    //TODO REQUEST NEW MESSAGE
     public void sendMessage(View view) {
         // Do something in response to button
         Intent intent = getIntent();

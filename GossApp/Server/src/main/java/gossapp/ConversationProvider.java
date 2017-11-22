@@ -2,10 +2,7 @@ package gossapp;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gossapp.classes.Conversation;
-import gossapp.classes.Information;
-import gossapp.classes.Message;
-import gossapp.classes.User;
+import gossapp.classes.*;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.springframework.context.annotation.Bean;
@@ -76,8 +73,8 @@ public class ConversationProvider {
     public Message newMessage(@RequestBody Message message) throws IOException {
         if(conversationsPerID.get(message.getConversationID()) != null){
             conversationsPerID.get(message.getConversationID()).addMessage(message);
-            System.out.println(conversationsPerID.get(message.getConversationID()).getMessages());
-            System.out.println(infoPerUser.get(message.getAuthorID()).getConversationsByID().get(message.getConversationID()).getMessages());
+            //System.out.println(conversationsPerID.get(message.getConversationID()).getMessages());
+            //System.out.println(infoPerUser.get(message.getAuthorID()).getConversationsByID().get(message.getConversationID()).getMessages());
             return message;
         }
 
@@ -136,14 +133,15 @@ public class ConversationProvider {
         return false;
     }
 
-    @RequestMapping(path = "/getFreshMessages")
+    @RequestMapping(path = "/getFreshMessages", method = RequestMethod.POST)
     @ResponseBody
-    public Conversation.MessagePack getFreshMessages(@RequestParam(value="conversationID") int conversationID,
-                                                     @RequestParam(value="from") int from){
-        if(conversationsPerID.get(conversationID) == null){
+    public Conversation.MessagePack getFreshMessages(@RequestBody ParametersPasser<Integer,Long,Integer,Integer> params){
+                                                    // @RequestParam(value="conversationID") int conversationID,
+                                                    //  @RequestParam(value="from") int from){
+        if(conversationsPerID.get(params.getA()) == null){
             return null;
         }
-        return conversationsPerID.get(conversationID).getFreshMessages(new Date(from));
+        return conversationsPerID.get(params.getA()).getFreshMessages(new Date(params.getB()));
     }
 
     @Bean

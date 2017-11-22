@@ -49,7 +49,24 @@ public class Message implements Comparable{
     @Override
     public int compareTo(Object o) {
         Message e = (Message) o;
-        return getDateAndTime().compareTo(e.getDateAndTime());
+
+        int timeDiff = getDateAndTime().compareTo(e.getDateAndTime());
+        int conversationDiff = Integer.compare(getConversationID(), e.getConversationID());
+        int textDiff = getText().compareTo(e.getText());
+        int authorDiff = Integer.compare(getAuthorID(),e.getAuthorID());
+        if(timeDiff == 0){
+            if(conversationDiff == 0){
+                if(textDiff == 0){
+                    return authorDiff;
+                }
+
+                return textDiff;
+            }
+
+            return conversationDiff;
+        }
+
+        return timeDiff;
     }
 
     @Override

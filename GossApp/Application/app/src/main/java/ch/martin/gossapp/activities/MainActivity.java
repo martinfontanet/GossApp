@@ -18,6 +18,9 @@ import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.R;
 import ch.martin.gossapp.classes.User;
 
+//TODO REAL USER CONNECTION (passwords etc)
+//TODO CREATE NEW USER
+
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Conversation> conversations;
     private LinearLayout conversationsLayout;
