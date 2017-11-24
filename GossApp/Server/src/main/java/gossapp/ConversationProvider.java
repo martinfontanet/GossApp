@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Random;
 
 @RestController
 public class ConversationProvider {
@@ -21,6 +22,9 @@ public class ConversationProvider {
     private final HashMap<Integer, ArrayList<Integer>> conversationsPerUser = new HashMap<Integer, ArrayList<Integer>>();
     private final HashMap<Integer, Information> infoPerUser = new HashMap<Integer, Information>();
     private final HashMap<Integer, User> usersByID = new HashMap<>();
+    private final HashMap<String,User> userByPseudo = new HashMap<>();
+    private final HashMap<String,String> passwordByPseudo = new HashMap<>();
+    private final Random rand = new Random();
 
     @RequestMapping(path = "/pureTest")
     @ResponseBody
@@ -33,6 +37,21 @@ public class ConversationProvider {
             e.printStackTrace();
             return "-1";
         }
+    }
+
+    @RequestMapping(path="/connection")
+    @ResponseBody
+    public User connection(@RequestBody ConnectionRequest connection){
+        if(userByPseudo.get(connection.getPseudo()) == null){
+            System.out.println("No corresponding user");
+            return new User(0,"No corresponding user");
+        }
+        else if(!passwordByPseudo.get(connection.getPseudo()).equals(connection.getPassword())){
+            System.out.println("Wrong password: "+connection.getPassword()+" instead of "+passwordByPseudo.get(connection.getPseudo()));
+            return new User(0, "Wrong password");
+        }
+
+        return userByPseudo.get(connection.getPseudo());
     }
 
     @RequestMapping(path = "/getInfo", method = RequestMethod.POST)
@@ -62,6 +81,25 @@ public class ConversationProvider {
         if(usersByID.get(user.getID()) == null){
             usersByID.put(user.getID(), user);
             return user;
+        }
+
+        return null;
+    }
+
+    @RequestMapping(path = "/newAccount", method=RequestMethod.POST)
+    @ResponseBody
+    public User newAccount(@RequestBody ConnectionRequest connectionRequest) {
+        if(userByPseudo.get(connectionRequest.getPseudo()) == null){
+            int id = rand.nextInt();
+
+            while (usersByID.keySet().contains(id)){
+                id = rand.nextInt();
+            }
+            User newUser = new User(id, connectionRequest.getPseudo());
+            userByPseudo.put(connectionRequest.getPseudo(),newUser);
+            passwordByPseudo.put(connectionRequest.getPseudo(),connectionRequest.getPassword());
+            usersByID.put(newUser.getID(), newUser);
+            return newUser;
         }
 
         return null;
