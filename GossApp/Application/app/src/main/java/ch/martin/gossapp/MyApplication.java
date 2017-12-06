@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import ch.martin.gossapp.activities.MainActivity;
+import ch.martin.gossapp.classes.ConnectionRequest;
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.Message;
+import ch.martin.gossapp.classes.ParametersPasser;
 import ch.martin.gossapp.classes.User;
 import ch.martin.gossapp.networking.ConversationsProvider;
 
@@ -23,17 +25,26 @@ public class MyApplication extends Application {
     private int currentConversation;
     private User user;
     private ConversationsProvider conversationsProvider;
+    private int createdAccount = 0;
 
     public MyApplication(){
         this.conversations = new ArrayList<Conversation>();
         currentConversation = 0;
-        user = new User(-1, "");
+        user = null;
 
     }
 
     public void addConversations(ArrayList<Conversation> conversationsList){
         conversations.clear();
         conversations.addAll(conversationsList);
+    }
+
+    public void setCreatedAccount(int i){
+        createdAccount = i;
+    }
+
+    public int getCreatedAccount(){
+        return createdAccount;
     }
 
 
@@ -108,10 +119,29 @@ public class MyApplication extends Application {
         }
     }
 
+    public void connectToAccount(ConnectionRequest connection){
+        conversationsProvider = new ConversationsProvider(getApplicationContext());
+        try {
+            conversationsProvider.connectAccount(connection);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createAccount(ConnectionRequest connectionRequest){
+        conversationsProvider = new ConversationsProvider(getApplicationContext());
+        try {
+            conversationsProvider.createAccount(connectionRequest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void connectUser() throws IOException {
         conversationsProvider = new ConversationsProvider(getApplicationContext());
-        conversationsProvider.connectUser();
+        //conversationsProvider.connectUser();
         conversationsProvider.getInformation(user);
+        System.out.println("connected");
         //conversationsProvider.getConversationsID(1);
     }
 
@@ -121,5 +151,15 @@ public class MyApplication extends Application {
 
     public User getUser(){
         return user;
+    }
+
+    public void newConversation(ParametersPasser<String, ArrayList<User>,Integer,Integer> params){
+        conversationsProvider = new ConversationsProvider(getApplicationContext());
+        try {
+            conversationsProvider.createConversation(params);
+            System.out.println("a");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

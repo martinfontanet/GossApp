@@ -118,7 +118,7 @@ public class ConversationProvider {
 
         return null;
     }
-
+/*
     // Adds a user to the specified conversation
     @RequestMapping(path = "/newConversation", method = RequestMethod.POST)
     @ResponseBody
@@ -129,6 +129,29 @@ public class ConversationProvider {
         }
         return null;
     }
+    */
+
+    // Adds a user to the specified conversation
+    @RequestMapping(path = "/newConversation", method = RequestMethod.POST)
+    @ResponseBody
+    public Conversation newConversation(@RequestBody ParametersPasser<String,ArrayList<User>,Integer,Integer> params){
+        int id = rand.nextInt();
+
+        while (conversationsPerID.keySet().contains(id)){
+            id = rand.nextInt();
+        }
+        if (conversationsPerID.get(id) == null) {
+            Conversation conversation = new Conversation(id, params.getA());
+            conversationsPerID.put(id,conversation);
+            for(User user : params.getB()) {
+                addUserToConversation(user.getID(),id);
+            }
+
+            return conversation;
+        }
+        return null;
+    }
+
 /*
     @RequestMapping(path = "/test")
     public Conversation test(){

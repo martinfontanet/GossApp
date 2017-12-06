@@ -3,6 +3,7 @@ package ch.martin.gossapp.networking;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 
@@ -34,6 +35,7 @@ import ch.martin.gossapp.MyApplication;
 import ch.martin.gossapp.R;
 import ch.martin.gossapp.activities.MainActivity;
 import ch.martin.gossapp.classes.ConnectionRequest;
+import ch.martin.gossapp.classes.Contact;
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.Information;
 import ch.martin.gossapp.classes.Message;
@@ -47,6 +49,10 @@ public class ConversationsProvider {
     private static final String URL_freshMessages = ServerAccess.BASE_URL + "/getFreshMessages";
     private static final String URL_getInfo = ServerAccess.BASE_URL + "/getInfo";
     private static final String URL_newMessage = ServerAccess.BASE_URL + "/newMessage";
+    private static final String URL_connection = ServerAccess.BASE_URL + "/connection";
+    private static final String URL_createAccount = ServerAccess.BASE_URL + "/newAccount";
+    private static final String URL_newConversation = ServerAccess.BASE_URL + "/newConversation";
+
 
 
     private static final String URL_test = ServerAccess.BASE_URL + "/pureTest";
@@ -207,6 +213,76 @@ public void getInformation(User query) throws IOException {
             throw new IOException();
         }
     }
+
+    public void connectAccount(final ConnectionRequest connection) throws IOException{
+    System.out.println(connection);
+        ServerAccess<ConnectionRequest, User> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_connection, new ServerAccess.OnResultHandler<User>() {
+            @Override
+            public void onSuccess(User response) {
+                ((MyApplication) context).setCurrentUser(response);
+                System.out.println(response);
+                try {
+                    ((MyApplication) context).connectUser();
+                } catch (IOException e) {
+                    System.out.println("AJAA");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError() {
+                System.out.println("OO");
+                //mainAct.renameTitle("Connection error.");
+            }
+
+        }, User.class);
+
+        try {
+            serverAccess.makeRequest(connection);
+        } catch (ServerAccess.ServerAccessException e) {
+            System.out.println("serveraccess");
+            throw new IOException();
+        }
+    }
+
+    public void createAccount(final ConnectionRequest connection) throws IOException{
+        System.out.println(connection);
+        ServerAccess<ConnectionRequest, User> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_createAccount, new ServerAccess.OnResultHandler<User>() {
+            @Override
+            public void onSuccess(User response) {
+                if(response!=null) {
+                    ((MyApplication) context).setCreatedAccount(1);
+                    System.out.println("NEW AC");
+                    try {
+                        connectAccount(connection);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    System.out.println("DEJA");
+                    ((MyApplication) context).setCreatedAccount(-1);
+                }
+
+            }
+
+            @Override
+            public void onError() {
+                System.out.println("UU");
+                ((MyApplication) context).setCreatedAccount(-1);
+                //mainAct.renameTitle("Connection error.");
+            }
+
+        }, User.class);
+
+        try {
+            serverAccess.makeRequest(connection);
+        } catch (ServerAccess.ServerAccessException e) {
+            System.out.println("serveraccess");
+            ((MyApplication) context).setCreatedAccount(-2);
+            throw new IOException();
+        }
+    }
 /*
     public String getFreshMessagesURL(int conversationID, long date) {
         return String.format(URL_freshMessages, conversationID, date);
@@ -222,4 +298,28 @@ public void getInformation(User query) throws IOException {
 
     }
     */
+
+    public void createConversation(ParametersPasser<String, ArrayList<User>, Integer, Integer> query) throws IOException {
+        ServerAccess<ParametersPasser<String, ArrayList<User>, Integer, Integer>, Conversation> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_newConversation, new ServerAccess.OnResultHandler<Conversation>() {
+            @Override
+            public void onSuccess(Conversation response) {
+                System.out.println(response);
+            }
+
+            @Override
+            public void onError() {
+                System.out.println("ERROR");
+                //mainAct.renameTitle("Connection error.");
+            }
+
+        }, Conversation.class);
+
+        try {
+            serverAccess.makeRequest(query);
+        } catch (ServerAccess.ServerAccessException e) {
+
+            throw new IOException();
+        }
+    }
 }
+

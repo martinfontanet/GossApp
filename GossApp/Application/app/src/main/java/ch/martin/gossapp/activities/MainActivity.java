@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import ch.martin.gossapp.MyApplication;
@@ -18,8 +17,10 @@ import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.R;
 import ch.martin.gossapp.classes.User;
 
-//TODO REAL USER CONNECTION (passwords etc)
-//TODO CREATE NEW USER
+//TODO CREATE NEW CONVERSATION
+//TODO ADD USER TO CONVERSATION
+//TODO CONTACT LIST
+
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Conversation> conversations;
@@ -33,15 +34,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         findViews();
-
+        /*
         try {
             ((MyApplication) getApplicationContext()).connectUser();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
+        renameTitle();
+        loadConversations();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+
+        setContentView(R.layout.activity_main);
+
+        findViews();
+        /*
+        try {
+            ((MyApplication) getApplicationContext()).connectUser();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        */
+        renameTitle();
+        loadConversations();
         autoRefresh();
     }
+
 
     private void autoRefresh() {
         handler.postDelayed(new Runnable() {
@@ -49,12 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
             // Method to execute every 300 milliseconds
             public void run() {
+                System.out.println("refreshed");
                 renameTitle();
                 loadConversations();
 
                 autoRefresh();
             }
-        }, 300);
+        }, 5000);
     }
 
     public void renameTitle(){
@@ -106,12 +129,12 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the conversation */
     public void accessConversation(View view) {
-        // Do something in response to button
+        handler.removeMessages(0);
         Intent intent = new Intent(this, ConversationActivity.class);
         startActivity(intent);
 
     }
-
+/*
     public void changeUser(int i){
         renameTitle();
 
@@ -120,12 +143,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToUser1(View view){
-        Intent intent = getIntent();
         changeUser(1);
     }
     public void goToUser2(View view){
-        Intent intent = getIntent();
         changeUser(2);
+    }
+
+    */
+
+    public void createConversation(View view){
+        Intent intent = new Intent(this, CreateConversation.class);
+        startActivity(intent);
+    }
+
+    public void unlog(View view){
+        Intent intent = new Intent(this, ConnectionMenu.class);
+        startActivity(intent);
+        finish();
     }
 
     private void findViews(){

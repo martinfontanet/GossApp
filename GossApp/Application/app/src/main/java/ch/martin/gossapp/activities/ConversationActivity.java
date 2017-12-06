@@ -1,6 +1,6 @@
 package ch.martin.gossapp.activities;
 
-import android.content.Intent;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.TreeSet;
 
@@ -19,6 +18,8 @@ import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.Message;
 import ch.martin.gossapp.MyApplication;
 import ch.martin.gossapp.R;
+
+//TODO FIX MESSAGE SENDING
 
 public class ConversationActivity extends AppCompatActivity {
 
@@ -40,17 +41,27 @@ public class ConversationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
 
-
-        // Get the Intent that started this activity and extract the string
-        Intent intent = getIntent();
-
         // Capture the layout's TextView and set the string as its text
         findViews();
 
         conversation = ((MyApplication) getApplicationContext()).getCurrentConversation();
         messages = conversation.getMessages();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         autoRefresh();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();  // Always call the superclass method first
+
+
+        handler.removeMessages(0);
     }
 
     private void autoRefresh() {
@@ -81,9 +92,6 @@ public class ConversationActivity extends AppCompatActivity {
 
 
     public void sendMessage(View view) {
-        // Do something in response to button
-        Intent intent = getIntent();
-
         //String message = messageText.getText().toString() + '\n';
         String message = messageText.getText().toString();
         messageText.setText("");
@@ -96,7 +104,7 @@ public class ConversationActivity extends AppCompatActivity {
 
 
     private void refresh(){
-        //Conversation.MessagePack newMessages = conversation.getFreshMessages(new Date(1));
+
         linear_layout.removeAllViews();
 
         for(Message mess: messages){ //newMessages.getPack()){

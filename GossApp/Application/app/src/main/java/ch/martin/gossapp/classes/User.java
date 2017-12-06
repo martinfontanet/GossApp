@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 
 public class User {
-    private final int id;
-    private String name;
+    protected final int id;
+    protected String name;
     private final ArrayList<Contact> contacts = new ArrayList<>();
     private final ArrayList<Integer> conversationsID = new ArrayList<>();
 
