@@ -36,6 +36,29 @@ public class ConversationActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler();
 
+    Runnable autoRun = new Runnable(){
+        @Override
+
+        // Method to execute every 300 milliseconds
+        public void run() {
+
+            // Load messages from time 0 or from the time of the 10th last message
+            Date from = new Date(Math.max(0,conversation.getMessages().size() - 10));
+
+            conversation = ((MyApplication) getApplicationContext()).getCurrentConversation();
+            ((MyApplication) getApplicationContext()).refreshMessages(conversation, from);
+            messages = conversation.getMessages();
+            System.out.println("SIZE : "+messages.size()+ " / "+messagesPrinted);
+            if(messages.size() > messagesPrinted) {
+                refresh();
+            }
+
+            autoRefresh();
+
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,34 +83,12 @@ public class ConversationActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();  // Always call the superclass method first
 
-
-        handler.removeMessages(0);
+        handler.removeCallbacks(autoRun);
+        //handler.removeMessages(0);
     }
 
     private void autoRefresh() {
-        handler.postDelayed(new Runnable() {
-            @Override
-
-            // Method to execute every 300 milliseconds
-            public void run() {
-
-                // Load messages from time 0 or from the time of the 10th last message
-                Date from = new Date(Math.max(0,conversation.getMessages().size() - 10));
-
-                ((MyApplication) getApplicationContext()).refreshMessages(conversation, from);
-
-                conversation = ((MyApplication) getApplicationContext()).getCurrentConversation();
-                messages = conversation.getMessages();
-                System.out.println("SIZE : "+messages.size()+ " / "+messagesPrinted);
-                if(messages.size() > messagesPrinted) {
-                    refresh();
-                }
-
-                autoRefresh();
-
-
-            }
-        }, 100);
+        handler.postDelayed(autoRun, 100);
     }
 
 

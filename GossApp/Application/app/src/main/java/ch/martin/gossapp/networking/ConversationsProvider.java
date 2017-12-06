@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 import ch.martin.gossapp.MyApplication;
 import ch.martin.gossapp.R;
@@ -39,6 +40,7 @@ import ch.martin.gossapp.classes.Contact;
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.Information;
 import ch.martin.gossapp.classes.Message;
+import ch.martin.gossapp.classes.MessagePack;
 import ch.martin.gossapp.classes.ParametersPasser;
 import ch.martin.gossapp.classes.User;
 
@@ -166,20 +168,20 @@ public void getInformation(User query) throws IOException {
 
     public void getFreshMessages(final Conversation conversation, Date time) throws IOException {
         final ParametersPasser<Integer,Long,Integer,Integer> query = new ParametersPasser<>(conversation.getId(),time.getTime(),0,0);
-        ServerAccess<ParametersPasser<Integer,Long,Integer,Integer>, Conversation.MessagePack> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_freshMessages, new ServerAccess.OnResultHandler<Conversation.MessagePack>() {
+        ServerAccess<ParametersPasser<Integer,Long,Integer,Integer>, MessagePack> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_freshMessages, new ServerAccess.OnResultHandler<MessagePack>() {
             @Override
-            public void onSuccess(Conversation.MessagePack response) {
-                System.out.println("SFJKSAHFKSJAHFKJSHFK");
-                ((MyApplication) context).addMessages(conversation.getId(),response);
+            public void onSuccess(MessagePack response) {
+                ((MyApplication) context).addMessages(conversation.getId(),(ArrayList<Message>) response.getPack());
             }
 
             @Override
             public void onError() {
+                //System.out.println("DID NOT WORK");
                 ((MyApplication) context).addMessages(conversation.getId(), null);
                 //mainAct.renameTitle("Connection error.");
             }
 
-        }, Conversation.MessagePack.class);
+        }, MessagePack.class);
 
         try {
             serverAccess.makeRequest(query);
@@ -190,12 +192,13 @@ public void getInformation(User query) throws IOException {
     }
 
     public void newMessage(final Message message) throws IOException{
+    System.out.println(message.getAuthorID()+" "+message.getConversationID()+" "+message.getDateAndTime()+" "+message);
         ServerAccess<Message, Message> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_newMessage, new ServerAccess.OnResultHandler<Message>() {
             @Override
             public void onSuccess(Message response) {
-                if(message != response){
+                if(!message.equals(response)){
                     //ERROR
-                    System.out.println("ERROR");
+                    System.out.println("MESSAGE NOT SENT");
                 }
             }
 

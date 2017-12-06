@@ -43,7 +43,7 @@ public class Message implements Comparable{
     @Override
     public boolean equals(Object obj) {
         return ((Message) obj).getAuthorID() == authorID && ((Message) obj).getConversationID() == conversationID &&
-                ((Message) obj).getText() == text && ((Message) obj).getDateAndTime() == dateAndTime;
+                ((Message) obj).getText().equals(text) && ((Message) obj).getDateAndTime().equals(dateAndTime);
     }
 
     @Override

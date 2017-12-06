@@ -196,7 +196,7 @@ public class ConversationProvider {
 
     @RequestMapping(path = "/getFreshMessages", method = RequestMethod.POST)
     @ResponseBody
-    public Conversation.MessagePack getFreshMessages(@RequestBody ParametersPasser<Integer,Long,Integer,Integer> params){
+    public MessagePack getFreshMessages(@RequestBody ParametersPasser<Integer,Long,Integer,Integer> params){
                                                     // @RequestParam(value="conversationID") int conversationID,
                                                     //  @RequestParam(value="from") int from){
         if(conversationsPerID.get(params.getA()) == null){

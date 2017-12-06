@@ -28,6 +28,19 @@ public class MainActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler();
 
+    private Runnable autoRun = new Runnable() {
+        @Override
+
+        // Method to execute every 300 milliseconds
+        public void run() {
+            System.out.println("refreshed");
+            renameTitle();
+            loadConversations();
+
+            autoRefresh();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,18 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void autoRefresh() {
-        handler.postDelayed(new Runnable() {
-            @Override
-
-            // Method to execute every 300 milliseconds
-            public void run() {
-                System.out.println("refreshed");
-                renameTitle();
-                loadConversations();
-
-                autoRefresh();
-            }
-        }, 5000);
+        handler.postDelayed(autoRun, 2000);
     }
 
     public void renameTitle(){
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the conversation */
     public void accessConversation(View view) {
-        handler.removeMessages(0);
+        handler.removeCallbacks(autoRun);
         Intent intent = new Intent(this, ConversationActivity.class);
         startActivity(intent);
 

@@ -96,16 +96,14 @@ public class MyApplication extends Application {
 
     }
 
-    public void addMessages(int conversationID, Conversation.MessagePack pack){
+    public void addMessages(int conversationID, ArrayList<Message> pack){
         if(pack != null) {
             for (Conversation conversation : conversations) {
                 if (conversation.getId() == conversationID) {
-                    for (Message message : pack.getPack())
+                    for (Message message : pack)
                         conversation.addMessage(message);
-                    System.out.println("ADDDDDDIIIIING");
                 }
             }
-            System.out.println(pack.getPack().size());
         }
 
 
@@ -114,6 +112,7 @@ public class MyApplication extends Application {
     public void newMessage(Message message){
         try {
             conversationsProvider.newMessage(message);
+            System.out.println("AAAO");
         } catch (IOException e) {
             e.printStackTrace();
         }

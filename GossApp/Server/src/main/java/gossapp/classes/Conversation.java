@@ -14,23 +14,6 @@ public class Conversation {
     private String name;
     private final TreeSet<Message> messages = new TreeSet<>();
 
-    public class MessagePack{
-        private final ArrayList<Message> pack;
-
-        public MessagePack(@JsonProperty("date") Date date) {
-            pack = new ArrayList<>();
-            for(Message message: messages){
-                if(message.getDateAndTime().compareTo(date) >= 0) {
-                    pack.add(message);
-                }
-            }
-        }
-
-        public ArrayList<Message> getPack(){
-            return pack;
-        }
-    }
-
     public Conversation(@JsonProperty("id") int id,@JsonProperty("name") String name) {
         this.id = id;
         this.users = new ArrayList<>();
@@ -83,7 +66,9 @@ public class Conversation {
     }
 
     public MessagePack getFreshMessages(Date date) {
-        return new MessagePack(date);
+        MessagePack messagePack = new MessagePack(new ArrayList<Message>());
+        messagePack.fillPack(date, messages);
+        return messagePack;
     }
 
 
