@@ -54,6 +54,7 @@ public class ConversationsProvider {
     private static final String URL_connection = ServerAccess.BASE_URL + "/connection";
     private static final String URL_createAccount = ServerAccess.BASE_URL + "/newAccount";
     private static final String URL_newConversation = ServerAccess.BASE_URL + "/newConversation";
+    private static final String URL_addContact = ServerAccess.BASE_URL + "/addContact";
 
 
 
@@ -301,6 +302,28 @@ public void getInformation(User query) throws IOException {
 
     }
     */
+
+    public void addContact(ParametersPasser<String, String, Integer, Integer> query) throws IOException{
+        ServerAccess<ParametersPasser<String, String, Integer, Integer>, Contact> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_addContact, new ServerAccess.OnResultHandler<Contact>() {
+            @Override
+            public void onSuccess(Contact response) {
+                System.out.println("OKOK CONTACT");
+            }
+
+            @Override
+            public void onError() {
+                System.out.println("ERROR CONTACT");
+            }
+
+        }, Contact.class);
+
+        try {
+            serverAccess.makeRequest(query);
+        } catch (ServerAccess.ServerAccessException e) {
+
+            throw new IOException();
+        }
+    }
 
     public void createConversation(ParametersPasser<String, ArrayList<User>, Integer, Integer> query) throws IOException {
         ServerAccess<ParametersPasser<String, ArrayList<User>, Integer, Integer>, Conversation> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_newConversation, new ServerAccess.OnResultHandler<Conversation>() {

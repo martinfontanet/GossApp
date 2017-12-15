@@ -205,6 +205,33 @@ public class ConversationProvider {
         return conversationsPerID.get(params.getA()).getFreshMessages(new Date(params.getB()));
     }
 
+    // Parameters : Contact, UserID, ?, ?
+    @RequestMapping(path = "/addContact", method = RequestMethod.POST)
+    @ResponseBody
+    public Contact addContact(@RequestBody ParametersPasser<String,String,Integer,Integer> params){
+        String contactPseudo = params.getA();
+        String contactNickName = params.getB();
+        int userID = params.getC();
+
+        if(infoPerUser.get(userID) == null){
+            infoPerUser.put(userID, new Information());
+        }
+        if(usersByID.get(userID) != null && userByPseudo.get(contactPseudo) != null){
+            int contactID = userByPseudo.get(contactPseudo).getID();
+            Contact contact = new Contact(contactID, contactPseudo, contactNickName);
+            if(!usersByID.get(userID).getContacts().contains(contact)) {
+                usersByID.get(userID).addContact(contact);
+                if (!infoPerUser.get(userID).getContacts().contains(contact)) {
+                    infoPerUser.get(userID).addContact(contact);
+                }
+                System.out.println(contact);
+                return contact;
+            }
+        }
+
+        return null;
+    }
+
     @Bean
     public CommonsRequestLoggingFilter requestLoggingFilter() {
         CommonsRequestLoggingFilter crlf = new CommonsRequestLoggingFilter();

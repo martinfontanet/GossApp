@@ -22,7 +22,8 @@
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.ConversationActivity" />
         <activity android:name=".activities.CreateAccountActivity" />
-        <activity android:name=".activities.CreateConversation"></activity>
+        <activity android:name=".activities.CreateConversation" />
+        <activity android:name=".activities.NewContact"></activity>
     </application>
 
 </manifest>

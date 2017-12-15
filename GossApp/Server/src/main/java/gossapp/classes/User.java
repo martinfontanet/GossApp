@@ -33,6 +33,14 @@ public class User {
         this.contacts.add(contact);
     }
 
+    public void addContacts(ArrayList<Contact> contactList){
+        for(Contact contact: contactList){
+            if(!contacts.contains(contact)){
+                contacts.add(contact);
+            }
+        }
+    }
+
     public void addConversationID(int conversationID){
         this.conversationsID.add(conversationID);
     }
@@ -43,5 +51,9 @@ public class User {
 
     public String getName(){
         return this.name;
+    }
+
+    public ArrayList<Contact> getContacts() {
+        return contacts;
     }
 }

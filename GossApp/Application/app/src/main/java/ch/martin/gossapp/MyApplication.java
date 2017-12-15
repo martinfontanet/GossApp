@@ -19,6 +19,8 @@ import ch.martin.gossapp.networking.ConversationsProvider;
  * Created by martin on 15/11/17.
  */
 
+//TODO ERROR WHEN ADDING CONTACT
+//TODO ADD CONTACT TO CONVERSATION
 
 public class MyApplication extends Application {
     private ArrayList<Conversation> conversations;
@@ -157,6 +159,18 @@ public class MyApplication extends Application {
         try {
             conversationsProvider.createConversation(params);
             System.out.println("a");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addContact(String pseudo, String nickname){
+        conversationsProvider = new ConversationsProvider(getApplicationContext());
+        ParametersPasser<String, String, Integer, Integer> params = new ParametersPasser<>(pseudo, nickname, user.getID(),0);
+        System.out.println(params.toString());
+        try {
+            conversationsProvider.addContact(params);
+            System.out.println("contactAdded");
         } catch (IOException e) {
             e.printStackTrace();
         }
