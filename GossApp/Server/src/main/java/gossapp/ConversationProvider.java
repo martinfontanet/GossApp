@@ -134,8 +134,11 @@ public class ConversationProvider {
     // Adds a user to the specified conversation
     @RequestMapping(path = "/newConversation", method = RequestMethod.POST)
     @ResponseBody
-    public Conversation newConversation(@RequestBody ParametersPasser<String,ArrayList<User>,Integer,Integer> params){
+    public Conversation newConversation(@RequestBody ParametersPasser<String,User,ArrayList<Contact>,Integer> params){
         int id = rand.nextInt();
+
+
+        ArrayList<Contact> contacts = params.getC();
 
         while (conversationsPerID.keySet().contains(id)){
             id = rand.nextInt();
@@ -143,8 +146,10 @@ public class ConversationProvider {
         if (conversationsPerID.get(id) == null) {
             Conversation conversation = new Conversation(id, params.getA());
             conversationsPerID.put(id,conversation);
-            for(User user : params.getB()) {
-                addUserToConversation(user.getID(),id);
+            User user = params.getB();
+            addUserToConversation(new ParametersPasser<>(user.getName(),id,0,0));
+            for(Contact contact: contacts){
+                addUserToConversation(new ParametersPasser<>(contact.getName(),id,0,0));
             }
 
             return conversation;
@@ -174,8 +179,18 @@ public class ConversationProvider {
     // Adds (creates) a new conversation to the conversations list
     @RequestMapping(path = "/addUserToConversation", method = RequestMethod.POST)
     @ResponseBody
-    public boolean addUserToConversation(@RequestParam(value="userID") int userID,
-                                @RequestParam(value="conversationID") int conversationID){
+    public boolean addUserToConversation(@RequestBody ParametersPasser<String, Integer, Integer, Integer> params){
+           // @RequestParam(value="pseudo") String pseudo,
+           //                     @RequestParam(value="conversationID") int conversationID){
+        int userID = 0;
+        String pseudo = params.getA();
+        int conversationID = params.getB();
+
+
+        if(userByPseudo.get(pseudo) != null) {
+            userID = userByPseudo.get(pseudo).getID();
+        }
+
         if (conversationsPerUser.get(userID) == null) {
             conversationsPerUser.put(userID, new ArrayList<Integer>());
         }
@@ -217,8 +232,7 @@ public class ConversationProvider {
             infoPerUser.put(userID, new Information());
         }
         if(usersByID.get(userID) != null && userByPseudo.get(contactPseudo) != null){
-            int contactID = userByPseudo.get(contactPseudo).getID();
-            Contact contact = new Contact(contactID, contactPseudo, contactNickName);
+            Contact contact = new Contact(contactPseudo, contactNickName);
             if(!usersByID.get(userID).getContacts().contains(contact)) {
                 usersByID.get(userID).addContact(contact);
                 if (!infoPerUser.get(userID).getContacts().contains(contact)) {

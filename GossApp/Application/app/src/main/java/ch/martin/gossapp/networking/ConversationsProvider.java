@@ -55,6 +55,7 @@ public class ConversationsProvider {
     private static final String URL_createAccount = ServerAccess.BASE_URL + "/newAccount";
     private static final String URL_newConversation = ServerAccess.BASE_URL + "/newConversation";
     private static final String URL_addContact = ServerAccess.BASE_URL + "/addContact";
+    private static final String URL_addUserToConversation = ServerAccess.BASE_URL + "/addUserToConversation";
 
 
 
@@ -149,6 +150,7 @@ public void getInformation(User query) throws IOException {
         @Override
         public void onSuccess(Information response) {
             ((MyApplication) context).addConversations(response.getConversations());
+            ((MyApplication) context).addContacts(response.getContacts());
         }
 
         @Override
@@ -325,8 +327,8 @@ public void getInformation(User query) throws IOException {
         }
     }
 
-    public void createConversation(ParametersPasser<String, ArrayList<User>, Integer, Integer> query) throws IOException {
-        ServerAccess<ParametersPasser<String, ArrayList<User>, Integer, Integer>, Conversation> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_newConversation, new ServerAccess.OnResultHandler<Conversation>() {
+    public void createConversation(ParametersPasser<String, User, ArrayList<Contact>, Integer> query) throws IOException {
+        ServerAccess<ParametersPasser<String, User, ArrayList<Contact>, Integer>, Conversation> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_newConversation, new ServerAccess.OnResultHandler<Conversation>() {
             @Override
             public void onSuccess(Conversation response) {
                 System.out.println(response);
@@ -339,6 +341,28 @@ public void getInformation(User query) throws IOException {
             }
 
         }, Conversation.class);
+
+        try {
+            serverAccess.makeRequest(query);
+        } catch (ServerAccess.ServerAccessException e) {
+
+            throw new IOException();
+        }
+    }
+
+    public void addUserToConversation(ParametersPasser<String, Integer, Integer, Integer> query) throws IOException{
+        ServerAccess<ParametersPasser<String, Integer, Integer, Integer>, Boolean> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_addContact, new ServerAccess.OnResultHandler<Boolean>() {
+            @Override
+            public void onSuccess(Boolean response) {
+                System.out.println("ADDED TO THE CONVERSATION");
+            }
+
+            @Override
+            public void onError() {
+                System.out.println("ERROR addConv");
+            }
+
+        }, Boolean.class);
 
         try {
             serverAccess.makeRequest(query);

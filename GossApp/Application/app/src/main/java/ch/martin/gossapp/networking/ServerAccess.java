@@ -51,8 +51,10 @@ public class ServerAccess<Req, Resp> {
             public void onResponse(JSONObject response) {
                 //System.out.println("RESPONSE !!!!!!!!!!!!!!!!!!!!");
                 try {
+                    System.out.println(response.toString());
                     onResultHandler.onSuccess(jsonToResponse(response));
                 } catch (JSONException | IOException e) {
+                    Log.e("ERROR",e.getMessage());
                     onResultHandler.onError();
                 }
             }

@@ -1,37 +1,47 @@
 package gossapp.classes;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Contact extends User implements Comparable{
+
+public class Contact implements Comparable{
+    private final String name;
     private String nickname;
 
-    public Contact(@JsonProperty("id")int id, @JsonProperty("name") String name, @JsonProperty("nickname") String nickname){
-        super(id,name);
+    @JsonCreator
+    public Contact(@JsonProperty("name") String name, @JsonProperty("nickname") String nickname){
+        this.name = name;
         this.nickname = nickname;
     }
 
-    public void modifyNickName(String nickname){
+
+
+    public void modifyNickname(String nickname){
         this.nickname = nickname;
     }
 
-    public String getNickName(){
+    public String getName() {
+        return name;
+    }
+
+    public String getNickname(){
         return this.nickname;
     }
 
-    public int getId(){
-        return id;
-    }
+    //public int getId(){
+    // return id;
+    //}
 
     @Override
     public boolean equals(Object obj) {
         Contact c = (Contact) obj;
-        return this.id == c.getId();
+        return this.name.equals(c.getName());
     }
 
     @Override
     public int compareTo(Object o) {
         Contact c = (Contact) o;
-        return this.nickname.compareTo(c.getNickName());
+        return this.nickname.compareTo(c.getNickname());
     }
 
     @Override

@@ -59,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+
+        handler.removeCallbacks(autoRun);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();  // Always call the superclass method first
 

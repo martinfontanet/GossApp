@@ -47,7 +47,9 @@ public class ConversationActivity extends AppCompatActivity {
 
             conversation = ((MyApplication) getApplicationContext()).getCurrentConversation();
             ((MyApplication) getApplicationContext()).refreshMessages(conversation, from);
-            messages = conversation.getMessages();
+            if(conversation!=null) {
+                messages = conversation.getMessages();
+            }
             System.out.println("SIZE : "+messages.size()+ " / "+messagesPrinted);
             if(messages.size() > messagesPrinted) {
                 refresh();

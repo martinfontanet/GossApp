@@ -9,6 +9,7 @@ import java.util.Date;
 
 import ch.martin.gossapp.activities.MainActivity;
 import ch.martin.gossapp.classes.ConnectionRequest;
+import ch.martin.gossapp.classes.Contact;
 import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.Message;
 import ch.martin.gossapp.classes.ParametersPasser;
@@ -19,11 +20,11 @@ import ch.martin.gossapp.networking.ConversationsProvider;
  * Created by martin on 15/11/17.
  */
 
-//TODO ERROR WHEN ADDING CONTACT
 //TODO ADD CONTACT TO CONVERSATION
 
 public class MyApplication extends Application {
     private ArrayList<Conversation> conversations;
+    private ArrayList<Contact> contacts;
     private int currentConversation;
     private User user;
     private ConversationsProvider conversationsProvider;
@@ -31,6 +32,7 @@ public class MyApplication extends Application {
 
     public MyApplication(){
         this.conversations = new ArrayList<Conversation>();
+        this.contacts = new ArrayList<Contact>();
         currentConversation = 0;
         user = null;
 
@@ -39,6 +41,11 @@ public class MyApplication extends Application {
     public void addConversations(ArrayList<Conversation> conversationsList){
         conversations.clear();
         conversations.addAll(conversationsList);
+    }
+
+    public void addContacts(ArrayList<Contact> contactsList){
+        contacts.clear();
+        contacts.addAll(contactsList);
     }
 
     public void setCreatedAccount(int i){
@@ -72,6 +79,16 @@ public class MyApplication extends Application {
         }
 
         return conversations;
+    }
+
+    public ArrayList<Contact> getContacts(){
+        try {
+            conversationsProvider.getInformation(user);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return contacts;
     }
 
     public void setCurrentConversation(int id){
@@ -154,11 +171,22 @@ public class MyApplication extends Application {
         return user;
     }
 
-    public void newConversation(ParametersPasser<String, ArrayList<User>,Integer,Integer> params){
+    public void newConversation(ParametersPasser<String, User,ArrayList<Contact>,Integer> params){
         conversationsProvider = new ConversationsProvider(getApplicationContext());
         try {
             conversationsProvider.createConversation(params);
             System.out.println("a");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addUsersToConversation(ArrayList<Contact> contacts, int conversationID){
+        conversationsProvider = new ConversationsProvider(getApplicationContext());
+        try {
+            for(Contact contact:contacts) {
+                conversationsProvider.addUserToConversation(new ParametersPasser<String, Integer, Integer, Integer>(contact.getName(),conversationID,0,0));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
