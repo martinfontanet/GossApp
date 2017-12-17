@@ -112,14 +112,17 @@ public class ConversationActivity extends AppCompatActivity {
 
         for(Message mess: messages){ //newMessages.getPack()){
             TextView text = new TextView(getApplicationContext());
-
-            String message = conversation.getNameByID(mess.getAuthorID()) +": "+ mess.toString();
+            String name = conversation.getNameByID(mess.getAuthorID());
+            String nickname = name;
+            if(((MyApplication) getApplicationContext()).getContactByPseudo(name) != null) {
+                nickname = ((MyApplication) getApplicationContext()).getContactByPseudo(name).getNickname();
+            }
 
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             lp.setMargins(10, 10, 10, 10);
             lp.gravity = Gravity.CENTER;
 
-            text.setText(message);
+
             text.setPadding(10,10,10,10);
 
             text.setTextColor(Color.BLACK);
@@ -128,14 +131,20 @@ public class ConversationActivity extends AppCompatActivity {
             LinearLayout inner_layout = new LinearLayout(getApplicationContext());//(LinearLayout) findViewById(R.id.bubble_layout);
             inner_layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
+            String message;
+
             if(mess.getAuthorID() == ((MyApplication) getApplicationContext()).getUser().getID()){
                 inner_layout.setGravity(Gravity.TOP | Gravity.RIGHT);
                 text.setBackgroundColor(0xC98BF3E7);
+                message =  mess.toString();
             }
             else{
                 inner_layout.setGravity(Gravity.TOP | Gravity.LEFT);
                 text.setBackgroundColor(0xC9D5D6DE);
+                message =  nickname + ": " + mess.toString();
             }
+
+            text.setText(message);
 
             inner_layout.addView(text);
 

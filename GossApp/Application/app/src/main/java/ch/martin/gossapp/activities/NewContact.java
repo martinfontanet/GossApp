@@ -26,6 +26,9 @@ public class NewContact extends AppCompatActivity {
     public void addNewContact(View view){
         String pseudo = pseudoText.getText().toString();
         String nickname = nicknameText.getText().toString();
+        if(nickname.isEmpty()){
+            nickname = pseudo;
+        }
 
         ((MyApplication) getApplicationContext()).addContact(pseudo,nickname);
         finish();

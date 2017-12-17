@@ -95,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadConversations(){
-        conversations = ((MyApplication) getApplicationContext()).getConversations();
+        MyApplication context = ((MyApplication) getApplicationContext());
+        conversations = context.getConversations();
         //System.out.println("size : "+conversations.size());
 
         conversationsLayout.removeAllViews();
@@ -107,7 +108,12 @@ public class MainActivity extends AppCompatActivity {
             String conversationTitle = conversation.getName() + ": ";
 
             for(User user: conversation.getUsers()){
-                conversationTitle += user.getName() + " ";
+                String name = user.getName();
+                String nickname = name;
+                if(context.getContactByPseudo(name) != null) {
+                    nickname = context.getContactByPseudo(name).getNickname();
+                }
+                conversationTitle += nickname+ " ";
             }
 
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -174,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void unlog(View view){
         handler.removeCallbacks(autoRun);
+        ((MyApplication) getApplicationContext()).unlog();
         Intent intent = new Intent(this, ConnectionMenu.class);
         startActivity(intent);
         finish();

@@ -6,6 +6,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import ch.martin.gossapp.activities.MainActivity;
 import ch.martin.gossapp.classes.ConnectionRequest;
@@ -25,6 +26,7 @@ import ch.martin.gossapp.networking.ConversationsProvider;
 public class MyApplication extends Application {
     private ArrayList<Conversation> conversations;
     private ArrayList<Contact> contacts;
+    private HashMap<String, Contact> contactsByPseudo;
     private int currentConversation;
     private User user;
     private ConversationsProvider conversationsProvider;
@@ -32,6 +34,7 @@ public class MyApplication extends Application {
 
     public MyApplication(){
         this.conversations = new ArrayList<Conversation>();
+        this.contactsByPseudo = new HashMap<>();
         this.contacts = new ArrayList<Contact>();
         currentConversation = 0;
         user = null;
@@ -43,9 +46,18 @@ public class MyApplication extends Application {
         conversations.addAll(conversationsList);
     }
 
+    public Contact getContactByPseudo(String pseudo) {
+        return contactsByPseudo.get(pseudo);
+    }
+
     public void addContacts(ArrayList<Contact> contactsList){
         contacts.clear();
         contacts.addAll(contactsList);
+        for(Contact contact: contactsList){
+            contactsByPseudo.put(contact.getName(), contact);
+
+        }
+
     }
 
     public void setCreatedAccount(int i){
@@ -202,5 +214,14 @@ public class MyApplication extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void unlog(){
+        conversations.clear();
+        contacts.clear();
+        contactsByPseudo.clear();
+        currentConversation = 0;
+        user = null;
+        createdAccount = 0;
     }
 }
