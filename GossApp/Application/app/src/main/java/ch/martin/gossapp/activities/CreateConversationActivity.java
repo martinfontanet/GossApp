@@ -18,7 +18,7 @@ import ch.martin.gossapp.classes.Conversation;
 import ch.martin.gossapp.classes.ParametersPasser;
 import ch.martin.gossapp.classes.User;
 
-public class CreateConversation extends AppCompatActivity {
+public class CreateConversationActivity extends AppCompatActivity {
     private ArrayList<Contact> contacts;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private TextView nameText;

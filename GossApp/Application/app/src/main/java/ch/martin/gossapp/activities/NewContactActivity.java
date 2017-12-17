@@ -12,7 +12,7 @@ import ch.martin.gossapp.R;
 import ch.martin.gossapp.classes.ParametersPasser;
 import ch.martin.gossapp.classes.User;
 
-public class NewContact extends AppCompatActivity {
+public class NewContactActivity extends AppCompatActivity {
     private TextView pseudoText;
     private TextView nicknameText;
 

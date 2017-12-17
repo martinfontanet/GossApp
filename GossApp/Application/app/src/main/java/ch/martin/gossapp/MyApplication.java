@@ -197,6 +197,7 @@ public class MyApplication extends Application {
         conversationsProvider = new ConversationsProvider(getApplicationContext());
         try {
             for(Contact contact:contacts) {
+                System.out.println(contact.getName() +" "+conversationID);
                 conversationsProvider.addUserToConversation(new ParametersPasser<String, Integer, Integer, Integer>(contact.getName(),conversationID,0,0));
             }
         } catch (IOException e) {

@@ -179,7 +179,7 @@ public class ConversationProvider {
     // Adds (creates) a new conversation to the conversations list
     @RequestMapping(path = "/addUserToConversation", method = RequestMethod.POST)
     @ResponseBody
-    public boolean addUserToConversation(@RequestBody ParametersPasser<String, Integer, Integer, Integer> params){
+    public Contact addUserToConversation(@RequestBody ParametersPasser<String, Integer, Integer, Integer> params){
            // @RequestParam(value="pseudo") String pseudo,
            //                     @RequestParam(value="conversationID") int conversationID){
         int userID = 0;
@@ -203,10 +203,10 @@ public class ConversationProvider {
             if(!infoPerUser.get(userID).getConversations().contains(conversationID)){
                 infoPerUser.get(userID).addConversation(conversationsPerID.get(conversationID));
             }
-            return true;
+            return new Contact(pseudo, pseudo);
         }
 
-        return false;
+        return null;
     }
 
     @RequestMapping(path = "/getFreshMessages", method = RequestMethod.POST)

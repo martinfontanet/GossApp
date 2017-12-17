@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ConnectionMenu">
+        <activity android:name=".activities.ConnectionMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,8 +22,9 @@
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.ConversationActivity" />
         <activity android:name=".activities.CreateAccountActivity" />
-        <activity android:name=".activities.CreateConversation" />
-        <activity android:name=".activities.NewContact"></activity>
+        <activity android:name=".activities.CreateConversationActivity" />
+        <activity android:name=".activities.NewContactActivity" />
+        <activity android:name=".activities.AddContactsActivity"></activity>
     </application>
 
 </manifest>

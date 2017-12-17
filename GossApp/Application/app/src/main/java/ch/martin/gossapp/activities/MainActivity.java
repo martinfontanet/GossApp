@@ -168,20 +168,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void createConversation(View view){
         handler.removeCallbacks(autoRun);
-        Intent intent = new Intent(this, CreateConversation.class);
+        Intent intent = new Intent(this, CreateConversationActivity.class);
         startActivity(intent);
     }
 
     public void addContact(View view){
         handler.removeCallbacks(autoRun);
-        Intent intent = new Intent(this, NewContact.class);
+        Intent intent = new Intent(this, NewContactActivity.class);
         startActivity(intent);
     }
 
     public void unlog(View view){
         handler.removeCallbacks(autoRun);
         ((MyApplication) getApplicationContext()).unlog();
-        Intent intent = new Intent(this, ConnectionMenu.class);
+        Intent intent = new Intent(this, ConnectionMenuActivity.class);
         startActivity(intent);
         finish();
     }

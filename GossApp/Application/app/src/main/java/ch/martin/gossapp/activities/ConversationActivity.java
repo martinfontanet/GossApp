@@ -1,6 +1,7 @@
 package ch.martin.gossapp.activities;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -159,6 +160,11 @@ public class ConversationActivity extends AppCompatActivity {
         }
 
         messagesPrinted = messages.size();
+    }
+
+    public void addContacts(View view){
+        Intent intent = new Intent(this, AddContactsActivity.class);
+        startActivity(intent);
     }
 
     private void findViews(){

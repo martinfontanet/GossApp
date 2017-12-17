@@ -351,10 +351,10 @@ public void getInformation(User query) throws IOException {
     }
 
     public void addUserToConversation(ParametersPasser<String, Integer, Integer, Integer> query) throws IOException{
-        ServerAccess<ParametersPasser<String, Integer, Integer, Integer>, Boolean> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_addContact, new ServerAccess.OnResultHandler<Boolean>() {
+        ServerAccess<ParametersPasser<String, Integer, Integer, Integer>, Contact> serverAccess = new ServerAccess<>(context, Request.Method.POST, URL_addUserToConversation, new ServerAccess.OnResultHandler<Contact>() {
             @Override
-            public void onSuccess(Boolean response) {
-                System.out.println("ADDED TO THE CONVERSATION");
+            public void onSuccess(Contact response) {
+                System.out.println(response.getName() + "ADDED TO THE CONVERSATION");
             }
 
             @Override
@@ -362,7 +362,7 @@ public void getInformation(User query) throws IOException {
                 System.out.println("ERROR addConv");
             }
 
-        }, Boolean.class);
+        }, Contact.class);
 
         try {
             serverAccess.makeRequest(query);

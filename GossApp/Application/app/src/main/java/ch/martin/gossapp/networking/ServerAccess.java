@@ -63,7 +63,7 @@ public class ServerAccess<Req, Resp> {
         this.errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //Log.e("ERROR", error.toString());
+                Log.e("ERROR", error.toString());
                 onResultHandler.onError();
             }
         };

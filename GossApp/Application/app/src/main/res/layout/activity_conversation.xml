@@ -64,7 +64,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:background="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/text_bar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,5 +80,19 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/add_contact_button"
+        style="@android:style/Widget.DeviceDefault.Button.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="1dp"
+        android:onClick="addContacts"
+        android:text="add contacts"
+        app:layout_constraintBottom_toTopOf="@+id/scroll_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

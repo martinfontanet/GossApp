@@ -11,7 +11,7 @@ import ch.martin.gossapp.MyApplication;
 import ch.martin.gossapp.R;
 import ch.martin.gossapp.classes.ConnectionRequest;
 
-public class ConnectionMenu extends AppCompatActivity {
+public class ConnectionMenuActivity extends AppCompatActivity {
     private TextView pseudoText;
     private TextView passwordText;
 
